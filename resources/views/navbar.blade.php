@@ -12,7 +12,9 @@
                         <a class="nav-link nav-item-main" href="/home">Расчет режимов</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link nav-item-main" href="#">Справочники</a>
+                        <a class="nav-link nav-item-main" href="{{ route('references.index') }}">
+                            Справочники
+                        </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link nav-item-main" href="#">История расчетов</a>

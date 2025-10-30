@@ -5,6 +5,7 @@
 @import url('./components/calculator_drilling.css');
 @import url('./components/calculator_turning.css');
 @import url('./components/calculator_milling.css');
+@import url('./references.css');
 @import url('./auth.css');
 /* Custom CSS */
 body {
