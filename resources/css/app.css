@@ -2,6 +2,7 @@
 @import 'bootstrap/dist/css/bootstrap.min.css';
 @import url('./components/navbar.css');
 @import url('./components/home.css');
+@import url('./components/calculator_drilling.css');
 /* Custom CSS */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;

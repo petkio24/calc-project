@@ -207,3 +207,13 @@
         font-size: 1rem;
     }
 }
+.operation-card-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.operation-card-link:hover {
+    text-decoration: none;
+    color: inherit;
+}

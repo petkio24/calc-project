@@ -9,7 +9,7 @@
             <ul class="navbar-nav me-auto">
                 @auth
                     <li class="nav-item">
-                        <a class="nav-link nav-item-main" href="#">Расчет режимов</a>
+                        <a class="nav-link nav-item-main" href="/home">Расчет режимов</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link nav-item-main" href="#">Справочники</a>
