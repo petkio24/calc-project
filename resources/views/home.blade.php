@@ -11,7 +11,7 @@
                     <div class="card-body">
                         <div class="operations-container">
                             <!-- Точение -->
-                            <a href="#" class="operation-card-link">
+                            <a href="{{ route('calculators.turning') }}" class="operation-card-link">
                                 <div class="operation-card" data-operation="turning">
                                     <div class="card-content">
                                         <div class="card-icon">
@@ -38,7 +38,7 @@
                                         </div>
                                     </div>
                                     <div class="card-hover">
-                                        <span class="hover-text">Скоро будет</span>
+                                        <span class="hover-text">Перейти к расчету</span>
                                     </div>
                                 </div>
                             </a>
@@ -82,7 +82,7 @@
                             </a>
 
                             <!-- Фрезерование -->
-                            <a href="#" class="operation-card-link">
+                            <a href="{{ route('calculators.milling') }}" class="operation-card-link">
                                 <div class="operation-card" data-operation="milling">
                                     <div class="card-content">
                                         <div class="card-icon">
@@ -108,7 +108,7 @@
                                         </div>
                                     </div>
                                     <div class="card-hover">
-                                        <span class="hover-text">Скоро будет</span>
+                                        <span class="hover-text">Перейти к расчету</span>
                                     </div>
                                 </div>
                             </a>

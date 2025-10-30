@@ -1,0 +1,304 @@
+/* Modern Calculator Milling Styles - Compact */
+.calculator-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 1.5rem 1rem;
+    min-height: calc(100vh - 100px);
+}
+
+/* Breadcrumbs */
+.calc-breadcrumbs {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+    background: #f8f9ff;
+    padding: 0.8rem 1.2rem;
+    border-radius: 8px;
+    border: 1px solid #e3e8ff;
+}
+
+.calc-breadcrumbs__item {
+    color: #6c757d;
+    text-decoration: none;
+    transition: color 0.2s ease;
+    font-weight: 500;
+}
+
+.calc-breadcrumbs__item:hover {
+    color: #4e73df;
+}
+
+.calc-breadcrumbs__item.active {
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+.calc-breadcrumbs__separator {
+    margin: 0 0.6rem;
+    color: #a0a7b8;
+    font-weight: 300;
+}
+
+/* Calculator Header */
+.calc-header {
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    color: white;
+    padding: 1.5rem 2rem;
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 4px 12px rgba(30, 60, 114, 0.3);
+}
+
+.calc-header h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 0 0 0.5rem 0;
+    color: white;
+}
+
+.calc-header h2 {
+    font-size: 1.1rem;
+    font-weight: 400;
+    margin: 0;
+    opacity: 0.9;
+    color: #e3f2fd;
+}
+
+/* Calculator Grid */
+.calc-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.calc-section {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    border: 1px solid #f0f4ff;
+}
+
+.section-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 1.2rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #f0f4ff;
+}
+
+/* Input Groups */
+.calc-input-group {
+    margin-bottom: 1.2rem;
+}
+
+.calc-input-group__label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #2c3e50;
+    font-size: 0.9rem;
+}
+
+.calc-input-group__input {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border: 2px solid #e8edff;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+    background: #fafbff;
+    font-weight: 500;
+    color: #2c3e50;
+}
+
+.calc-input-group__input:focus {
+    border-color: #4e73df;
+    background: white;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(78, 115, 223, 0.1);
+}
+
+.calc-input-group__input::placeholder {
+    color: #a0a7b8;
+    font-weight: 400;
+}
+
+/* Select Styling */
+.calc-input-group__input[type="select"] {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' fill='%234e73df' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 14px;
+}
+
+/* Calculate Button */
+.calc-actions {
+    text-align: center;
+    margin-top: 1rem;
+}
+
+.btn-calculate {
+    background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);
+    color: white;
+    border: none;
+    padding: 0.9rem 2rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 6px rgba(78, 115, 223, 0.3);
+}
+
+.btn-calculate:hover {
+    background: linear-gradient(135deg, #3b5fc9 0%, #1a3a9e 100%);
+    box-shadow: 0 4px 12px rgba(78, 115, 223, 0.4);
+}
+
+/* Results Section */
+.calc-results {
+    background: #f8f9ff;
+    border: 1px solid #e8edff;
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin-top: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.results-header {
+    margin-bottom: 1.2rem;
+    text-align: center;
+}
+
+.results-header h3 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin: 0 0 0.3rem 0;
+}
+
+.results-subtitle {
+    color: #6c757d;
+    font-size: 0.9rem;
+    font-weight: 400;
+}
+
+.results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.2rem;
+}
+
+.result-card {
+    background: white;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+    border-left: 4px solid #4e73df;
+}
+
+.result-card.success {
+    border-left-color: #1cc88a;
+    background: #f6fffd;
+}
+
+.result-card.danger {
+    border-left-color: #e74a3b;
+    background: #fff6f6;
+}
+
+.result-label {
+    font-weight: 600;
+    color: #6c757d;
+    font-size: 0.8rem;
+    margin-bottom: 0.3rem;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.result-value {
+    font-weight: 700;
+    color: #2c3e50;
+    font-size: 1.1rem;
+}
+
+.result-card.success .result-value {
+    color: #1cc88a;
+}
+
+.result-card.danger .result-value {
+    color: #e74a3b;
+}
+
+/* Power Status */
+.power-status {
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 1rem;
+    margin-top: 1rem;
+    border: 1px solid;
+    background: white;
+}
+
+.status-success {
+    background: #ecfdf5;
+    color: #065f46;
+    border-color: #a7f3d0;
+}
+
+.status-danger {
+    background: #fef2f2;
+    color: #991b1b;
+    border-color: #fecaca;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .calculator-container {
+        padding: 1rem 0.5rem;
+    }
+
+    .calc-header {
+        padding: 1.2rem 1.5rem;
+        border-radius: 10px;
+    }
+
+    .calc-header h1 {
+        font-size: 1.5rem;
+    }
+
+    .calc-header h2 {
+        font-size: 1rem;
+    }
+
+    .calc-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .calc-section {
+        padding: 1.2rem;
+    }
+
+    .results-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .calc-breadcrumbs {
+        padding: 0.6rem 1rem;
+        margin-bottom: 1.2rem;
+    }
+
+    .btn-calculate {
+        width: 100%;
+        padding: 0.8rem 1.5rem;
+    }
+}
