@@ -12,10 +12,12 @@
 </head>
 <body>
 <div id="app">
-    @include('navbar')
-    <main class="py-4">
+    @if(!request()->is('login', 'register', 'email/verify*', 'password/*'))
+        @include('navbar')
+    @endif
+{{--    <main class="py-4">--}}
         @yield('content')
-    </main>
+{{--    </main>--}}
 </div>
 </body>
 </html>
