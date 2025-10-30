@@ -17,9 +17,14 @@ class ReferenceController extends Controller
      */
     public function index()
     {
+        $materials = TurningMaterial::all()->groupBy('material_group');
+        $toolMaterials = ToolMaterial::all()->groupBy('material_type');
+
         return view('references.index', [
             'title' => 'Справочники',
-            'activeTab' => 'overview'
+            'activeTab' => 'overview',
+            'materials' => $materials,
+            'toolMaterials' => $toolMaterials
         ]);
     }
 
@@ -42,7 +47,7 @@ class ReferenceController extends Controller
      */
     public function turningMaterials()
     {
-        $materials = TurningMaterial::all();
+        $materials = TurningMaterial::all()->groupBy('material_group');
 
         return view('references.turning-materials', [
             'title' => 'Справочник материалов для точения',
@@ -70,7 +75,7 @@ class ReferenceController extends Controller
      */
     public function toolMaterials()
     {
-        $materials = ToolMaterial::all();
+        $materials = ToolMaterial::all()->groupBy('material_type');
 
         return view('references.tool-materials', [
             'title' => 'Справочник материалов инструмента',
@@ -87,7 +92,7 @@ class ReferenceController extends Controller
         $geometries = ToolGeometry::all();
 
         return view('references.tool-geometries', [
-            'title' => 'Справочник геометрии инструмента',
+            'title' => 'Справочник маркировки инструмента',
             'activeTab' => 'tools',
             'geometries' => $geometries
         ]);

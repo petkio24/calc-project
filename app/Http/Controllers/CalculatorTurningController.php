@@ -15,8 +15,8 @@ class CalculatorTurningController extends Controller
      */
     public function index()
     {
-        $materials = TurningMaterial::all();
-        $toolMaterials = ToolMaterial::all();
+        $materials = TurningMaterial::all()->groupBy('material_group');
+        $toolMaterials = ToolMaterial::all()->groupBy('material_type');
         $toolGeometries = ToolGeometry::all();
         $machineTypes = MachineType::all();
 
@@ -39,12 +39,12 @@ class CalculatorTurningController extends Controller
         $request->validate([
             'material_id' => 'required|exists:turning_materials,id',
             'tool_material_id' => 'required|exists:tool_materials,id',
+            'tool_geometry_id' => 'required|exists:tool_geometries,id',
             'initial_diameter' => 'required|numeric|min:0.1',
             'final_diameter' => 'required|numeric|min:0.1',
         ]);
 
-        // Необязательные поля с значениями по умолчанию
-        $toolGeometryId = $request->tool_geometry_id;
+        // Необязательные поля
         $machineTypeId = $request->machine_type_id;
         $operationType = $request->operation_type ?? 'roughing';
         $surfaceQuality = $request->surface_quality ?? 'normal';
@@ -52,9 +52,7 @@ class CalculatorTurningController extends Controller
         // Получаем данные из БД
         $material = TurningMaterial::find($request->material_id);
         $toolMaterial = ToolMaterial::find($request->tool_material_id);
-
-        // Значения по умолчанию для необязательных полей
-        $toolGeometry = $toolGeometryId ? ToolGeometry::find($toolGeometryId) : $this->getDefaultToolGeometry();
+        $toolGeometry = ToolGeometry::find($request->tool_geometry_id);
         $machineType = $machineTypeId ? MachineType::find($machineTypeId) : $this->getDefaultMachineType();
 
         // Входные параметры
@@ -84,37 +82,36 @@ class CalculatorTurningController extends Controller
         // Расчет мощности резания
         $cuttingPower = $this->calculateCuttingPower($depthOfCut, $feed, $cuttingSpeed, $material, $toolGeometry);
 
-        // Расчет времени обработки (приблизительно)
+        // Расчет времени обработки
         $cuttingTime = $this->calculateCuttingTime($initialDiameter, $finalDiameter, $feed, $spindleRPM);
 
         // Расчет материалоемкости
         $materialRemovalRate = $this->calculateMaterialRemovalRate($depthOfCut, $feed, $cuttingSpeed);
 
-        // Проверка ограничений станка (только если выбран станок)
+        // Проверка ограничений станка
         $isRpmValid = $machineTypeId ? $spindleRPM <= $machineType->max_rpm : true;
         $isPowerValid = $machineTypeId ? $cuttingPower <= $this->getMachinePower($machineType) : true;
 
         // Флаги использования значений по умолчанию
-        $usedDefaultToolGeometry = !$toolGeometryId;
         $usedDefaultMachineType = !$machineTypeId;
 
         // Дополнительные расчеты
-        $feedRate = $feed * $spindleRPM; // Минутная подача
+        $feedRate = $feed * $spindleRPM;
         $specificPower = $material->power_factor * $toolGeometry->feed_factor;
 
         return view('calculators.turning', [
             'title' => 'Профессиональный калькулятор точения',
             'operation' => 'turning',
-            'materials' => TurningMaterial::all(),
-            'toolMaterials' => ToolMaterial::all(),
+            'materials' => TurningMaterial::all()->groupBy('material_group'),
+            'toolMaterials' => ToolMaterial::all()->groupBy('material_type'),
             'toolGeometries' => ToolGeometry::all(),
             'machineTypes' => MachineType::all(),
             'result' => [
                 // Основные параметры
-                'material' => $material->name,
-                'tool_material' => $toolMaterial->name,
-                'tool_geometry' => $toolGeometry->name,
-                'machine_type' => $machineType->name,
+                'material' => $material,
+                'tool_material' => $toolMaterial,
+                'tool_geometry' => $toolGeometry,
+                'machine_type' => $machineType,
                 'initial_diameter' => $initialDiameter,
                 'final_diameter' => $finalDiameter,
                 'depth_of_cut' => round($depthOfCut, 3),
@@ -140,36 +137,12 @@ class CalculatorTurningController extends Controller
                 'surface_quality' => $surfaceQuality,
 
                 // Флаги значений по умолчанию
-                'used_default_tool_geometry' => $usedDefaultToolGeometry,
-                'used_default_machine_type' => $usedDefaultMachineType,
-
-                // Дополнительная информация
-                'tool_material_max_speed' => $toolMaterial->max_cutting_speed,
-                'machine_max_rpm' => $machineType->max_rpm,
-                'machine_power_range' => $machineType->power_range,
-                'tool_geometry_angles' => [
-                    'rake' => $toolGeometry->rake_angle,
-                    'clearance' => $toolGeometry->clearance_angle,
-                    'cutting_edge' => $toolGeometry->cutting_edge_angle
-                ]
+                'used_default_machine_type' => $usedDefaultMachineType
             ]
         ]);
     }
 
-    /**
-     * Значения по умолчанию для необязательных полей
-     */
-    private function getDefaultToolGeometry()
-    {
-        return new \App\Models\ToolGeometry([
-            'name' => 'Универсальная (стандарт)',
-            'rake_angle' => 6.00,
-            'clearance_angle' => 7.00,
-            'cutting_edge_angle' => 60.00,
-            'feed_factor' => 1.0000
-        ]);
-    }
-
+    // Остальные методы остаются без изменений...
     private function getDefaultMachineType()
     {
         return new \App\Models\MachineType([
@@ -182,11 +155,10 @@ class CalculatorTurningController extends Controller
 
     private function getMachinePower($machineType)
     {
-        // Извлекаем максимальную мощность из диапазона "5-15 кВт"
         if (preg_match('/(\d+)-(\d+)/', $machineType->power_range, $matches)) {
-            return (float) $matches[2]; // Берем верхнюю границу диапазона
+            return (float) $matches[2];
         }
-        return 7.5; // Значение по умолчанию
+        return 7.5;
     }
 
     private function calculateBaseCuttingSpeed($material, $toolMaterial)
@@ -219,7 +191,7 @@ class CalculatorTurningController extends Controller
 
     private function calculateFeed($material, $toolGeometry, $operationType, $surfaceQuality, $depthOfCut)
     {
-        $baseFeed = ($material->recommended_feed_min + $material->recommended_feed_max) / 2;
+        $baseFeed = ($material->feed_per_rev_min + $material->feed_per_rev_max) / 2;
         $feed = $baseFeed * $toolGeometry->feed_factor;
 
         if ($operationType === 'roughing') {
@@ -238,7 +210,7 @@ class CalculatorTurningController extends Controller
             $feed *= 0.7;
         }
 
-        return max($feed, $material->recommended_feed_min);
+        return max($feed, $material->feed_per_rev_min);
     }
 
     private function calculateSpindleRPM($cuttingSpeed, $diameter, $machineType)

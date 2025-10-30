@@ -13,6 +13,8 @@ class TurningMaterial extends Model
 
     protected $fillable = [
         'name',
+        'material_group',
+        'hardness_range',
         'cutting_speed_min',
         'cutting_speed_max',
         'feed_per_rev_min',
@@ -27,4 +29,14 @@ class TurningMaterial extends Model
         'feed_per_rev_max' => 'decimal:4',
         'power_factor' => 'decimal:4'
     ];
+
+    // Геттеры для удобства
+    public function getMaterialGroupNameAttribute()
+    {
+        return [
+            'black_metals' => 'Черные металлы',
+            'nonferrous_metals' => 'Цветные металлы',
+            'non_metals' => 'Неметаллы'
+        ][$this->material_group] ?? $this->material_group;
+    }
 }

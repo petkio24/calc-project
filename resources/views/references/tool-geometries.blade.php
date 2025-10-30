@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Справочник геометрии инструмента')
+@section('title', 'Справочник маркировки инструмента')
 
 @section('styles')
     <link href="{{ asset('css/references.css') }}" rel="stylesheet">
@@ -14,13 +14,13 @@
             <span class="references-breadcrumbs__separator">›</span>
             <a href="{{ route('references.index') }}" class="references-breadcrumbs__item">Справочники</a>
             <span class="references-breadcrumbs__separator">›</span>
-            <span class="references-breadcrumbs__item active">Геометрия инструмента</span>
+            <span class="references-breadcrumbs__item active">Маркировка инструмента</span>
         </nav>
 
         <!-- Заголовок -->
         <div class="references-header">
-            <h1>Геометрия режущего инструмента</h1>
-            <p>Справочник геометрических параметров инструмента с углами резания и коэффициентами подач</p>
+            <h1>Маркировка режущего инструмента</h1>
+            <p>Справочник геометрических параметров инструмента с полной маркировкой пластин</p>
         </div>
 
         <!-- Навигация -->
@@ -37,7 +37,7 @@
                         <polyline points="2 15.5 12 8.5 22 15.5"></polyline>
                         <line x1="12" y1="2" x2="12" y2="8.5"></line>
                     </svg>
-                    Каталог геометрий ({{ $geometries->count() }})
+                    Каталог маркировок ({{ $geometries->count() }})
                 </h2>
             </div>
 
@@ -45,12 +45,15 @@
                 <table class="data-table">
                     <thead>
                     <tr>
-                        <th>Геометрия</th>
-                        <th>Передний угол</th>
+                        <th>Маркировка</th>
+                        <th>Форма</th>
                         <th>Задний угол</th>
-                        <th>Главный угол</th>
+                        <th>Класс точности</th>
+                        <th>Стружколом</th>
+                        <th>Длина кромки</th>
+                        <th>Толщина</th>
+                        <th>Радиус</th>
                         <th>Коэффициент подачи</th>
-                        <th>Рекомендации</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -60,32 +63,33 @@
                                 <strong>{{ $geometry->name }}</strong>
                             </td>
                             <td>
-                            <span class="{{ $geometry->rake_angle > 0 ? 'value-high' : 'value-low' }}">
-                                {{ $geometry->rake_angle > 0 ? '+' : '' }}{{ $geometry->rake_angle }}°
-                            </span>
+                                <span class="data-badge badge-primary">{{ $geometry->shape_name }}</span>
                             </td>
                             <td>
                                 <span class="value-medium">{{ $geometry->clearance_angle }}°</span>
                             </td>
                             <td>
-                                <span class="value-medium">{{ $geometry->cutting_edge_angle }}°</span>
+                                <span class="data-badge badge-info">{{ $geometry->tolerance_class_name }}</span>
+                            </td>
+                            <td>
+                                <small>{{ $geometry->chipbreaker_type ?: 'Нет' }}</small>
+                            </td>
+                            <td>
+                                <span class="value-medium">{{ $geometry->cutting_edge_length }} мм</span>
+                            </td>
+                            <td>
+                                <span class="value-medium">{{ $geometry->insert_thickness }} мм</span>
+                            </td>
+                            <td>
+                                <span class="data-badge badge-warning">R{{ $geometry->corner_radius }}</span>
                             </td>
                             <td>
                                 @if($geometry->feed_factor > 1.0)
                                     <span class="data-badge badge-success">+{{ ($geometry->feed_factor - 1) * 100 }}%</span>
                                 @elseif($geometry->feed_factor < 1.0)
-                                    <span class="data-badge badge-warning">-{{ (1 - $geometry->feed_factor) * 100 }}%</span>
+                                    <span class="data-badge badge-danger">-{{ (1 - $geometry->feed_factor) * 100 }}%</span>
                                 @else
                                     <span class="data-badge badge-info">стандарт</span>
-                                @endif
-                            </td>
-                            <td>
-                                @if($geometry->feed_factor > 1.2)
-                                    <small>Высокие подачи</small>
-                                @elseif($geometry->feed_factor > 0.9)
-                                    <small>Универсальное</small>
-                                @else
-                                    <small>Пониженные подачи</small>
                                 @endif
                             </td>
                         </tr>
@@ -98,7 +102,7 @@
                         <polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5 12 2"></polygon>
                     </svg>
                     <h3>Данные не найдены</h3>
-                    <p>В базе данных нет геометрий инструмента</p>
+                    <p>В базе данных нет маркировок инструмента</p>
                 </div>
             @endif
         </div>

@@ -13,8 +13,23 @@ class ToolMaterial extends Model
 
     protected $fillable = [
         'name',
-        'type',
+        'material_type',
+        'grade',
         'max_cutting_speed',
-        'wear_resistance_factor'
+        'wear_resistance_factor',
+        'application_notes'
     ];
+
+    protected $casts = [
+        'max_cutting_speed' => 'decimal:2',
+        'wear_resistance_factor' => 'decimal:4'
+    ];
+
+    public function getMaterialTypeNameAttribute()
+    {
+        return [
+            'hard_alloy' => 'Твердый сплав',
+            'high_speed_steel' => 'Быстрорежущая сталь'
+        ][$this->material_type] ?? $this->material_type;
+    }
 }
