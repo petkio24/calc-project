@@ -317,7 +317,6 @@
                                 <option value="new" {{ old('machine_age') == 'new' ? 'selected' : '' }}>🟢 Новый (0-2 года)</option>
                                 <option value="normal" {{ old('machine_age') == 'normal' ? 'selected' : '' }}>🟡 Нормальный (3-7 лет)</option>
                                 <option value="worn" {{ old('machine_age') == 'worn' ? 'selected' : '' }}>🔴 Изношенный (8+ лет)</option>
-                                <option value="custom" {{ old('machine_age') == 'custom' ? 'selected' : '' }}>⚙️ Указать точный срок</option>
                             </select>
                             <div class="styled-select__arrow">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -325,14 +324,6 @@
                                 </svg>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="calc-input-group" id="custom_age_container" style="display: none;">
-                        <label class="calc-input-group__label" for="custom_years">Точный срок службы (лет)</label>
-                        <input class="calc-input-group__input" id="custom_years"
-                               name="custom_years" type="number" min="0" max="50"
-                               placeholder="Введите срок службы"
-                               value="{{ old('custom_years') }}">
                     </div>
                     <div class="input-row">
                         <div class="calc-input-group">

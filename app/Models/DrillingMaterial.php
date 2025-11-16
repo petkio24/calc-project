@@ -1,4 +1,5 @@
 <?php
+// app/Models/DrillingMaterial.php
 
 namespace App\Models;
 
@@ -9,22 +10,18 @@ class DrillingMaterial extends Model
 {
     use HasFactory;
 
-    protected $table = 'drilling_materials';
-
     protected $fillable = [
         'name',
+        'material_group',
+        'material_group_name',
+        'hardness_range',
         'cutting_speed_min',
         'cutting_speed_max',
         'feed_per_rev_min',
         'feed_per_rev_max',
-        'power_factor'
-    ];
-
-    protected $casts = [
-        'cutting_speed_min' => 'decimal:2',
-        'cutting_speed_max' => 'decimal:2',
-        'feed_per_rev_min' => 'decimal:4',
-        'feed_per_rev_max' => 'decimal:4',
-        'power_factor' => 'decimal:4'
+        'power_factor',
+        'specific_pressure',
+        'thermal_conductivity',
+        'description'
     ];
 }

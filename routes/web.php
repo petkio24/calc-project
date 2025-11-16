@@ -28,6 +28,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/tool-geometries', [ReferenceController::class, 'toolGeometries'])->name('references.tool-geometries');
         Route::get('/machine-types', [ReferenceController::class, 'machineTypes'])->name('references.machine-types');
     });
+
     // Маршруты калькуляторов
     Route::get('/calculators/drilling', [CalculatorDrillingController::class, 'index'])->name('calculators.drilling');
     Route::post('/calculators/drilling/calculate', [CalculatorDrillingController::class, 'calculate'])->name('calculators.drilling.calculate');

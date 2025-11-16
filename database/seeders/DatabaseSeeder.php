@@ -18,6 +18,8 @@ class DatabaseSeeder extends Seeder
             AdditionalMaterialsSeeder::class,
             UpdateMachineTypesSeeder::class,
             UpdateOperationFactorsSeeder::class,
+            DrillingMaterialsSeeder::class,
+            DrillingToolsSeeder::class,
         ]);
     }
 }
