@@ -130,6 +130,21 @@ function initDrillingCalculator() {
             inputs.power.value = power.toFixed(2);
         }
     }
+
+    // Управление полем срока службы станка
+    const machineAgeSelect = document.getElementById('machine_age');
+    const customAgeContainer = document.getElementById('custom_age_container');
+
+    function updateMachineAgeField() {
+        if (machineAgeSelect.value === 'custom') {
+            customAgeContainer.style.display = 'block';
+        } else {
+            customAgeContainer.style.display = 'none';
+        }
+    }
+
+    machineAgeSelect.addEventListener('change', updateMachineAgeField);
+    updateMachineAgeField(); // Инициализация при загрузке
 }
 
 // Initialize calculator when DOM is loaded
