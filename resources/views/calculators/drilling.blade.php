@@ -312,14 +312,14 @@
                     <div class="results-grid">
                         <div class="result-card">
                             <div class="result-label">Материал заготовки</div>
-                            <div class="result-value">{{ $result['material'] }}</div>
-                            <div class="result-info">{{ $result['material_hardness'] }}</div>
+                            <div class="result-value">{{ $result['material']->name }}</div>
+                            <div class="result-info">{{ $result['material']->material_group_name }}, {{ $result['material']->hardness_range }}</div>
                         </div>
 
                         <div class="result-card">
                             <div class="result-label">Тип сверла</div>
-                            <div class="result-value">{{ $result['tool'] }}</div>
-                            <div class="result-info">{{ $result['tool_type'] }}, {{ $result['tool_material'] }}</div>
+                            <div class="result-value">{{ $result['tool']->name }}</div>
+                            <div class="result-info">{{ $result['tool']->tool_type_name }}, {{ $result['tool']->material_type_name }}</div>
                         </div>
 
                         <div class="result-card">
@@ -360,6 +360,9 @@
                         <div class="result-card {{ $result['is_rpm_valid'] ? 'success' : 'danger' }}">
                             <div class="result-label">Обороты шпинделя</div>
                             <div class="result-value">{{ $result['spindle_rpm'] }} об/мин</div>
+                            <div class="result-formula">
+                                n = (1000 × V) ÷ (π × D) = (1000 × {{ $result['cutting_speed'] }}) ÷ (3.1416 × {{ $result['diameter'] }})
+                            </div>
                             @if(!$result['is_rpm_valid'])
                                 <div class="result-warning">⚠ Превышение максимальных оборотов станка</div>
                             @endif
@@ -368,16 +371,25 @@
                         <div class="result-card">
                             <div class="result-label">Скорость резания</div>
                             <div class="result-value">{{ $result['cutting_speed'] }} м/мин</div>
+                            <div class="result-formula">
+                                V = (π × D × n) ÷ 1000 = (3.1416 × {{ $result['diameter'] }} × {{ $result['spindle_rpm'] }}) ÷ 1000
+                            </div>
                         </div>
 
                         <div class="result-card">
                             <div class="result-label">Подача на оборот</div>
                             <div class="result-value">{{ $result['feed_per_revolution'] }} мм/об</div>
+                            <div class="result-formula">
+                                S = f(материал, диаметр, операция) = {{ $result['feed_per_revolution'] }} мм/об
+                            </div>
                         </div>
 
                         <div class="result-card">
                             <div class="result-label">Минутная подача</div>
                             <div class="result-value">{{ $result['feed_rate'] }} мм/мин</div>
+                            <div class="result-formula">
+                                F = S × n = {{ $result['feed_per_revolution'] }} × {{ $result['spindle_rpm'] }}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -389,16 +401,25 @@
                         <div class="result-card">
                             <div class="result-label">Осевое усилие</div>
                             <div class="result-value">{{ $result['thrust_force'] }} Н</div>
+                            <div class="result-formula">
+                                P = K × D × S<sup>0.8</sup> = {{ $result['material']->specific_pressure }} × {{ $result['diameter'] }} × {{ $result['feed_per_revolution'] }}<sup>0.8</sup>
+                            </div>
                         </div>
 
                         <div class="result-card">
                             <div class="result-label">Крутящий момент</div>
                             <div class="result-value">{{ $result['torque'] }} Н·м</div>
+                            <div class="result-formula">
+                                M = C × D² × S<sup>0.8</sup> = ({{ $result['material']->specific_pressure }} ÷ 200) × {{ $result['diameter'] }}² × {{ $result['feed_per_revolution'] }}<sup>0.8</sup>
+                            </div>
                         </div>
 
                         <div class="result-card {{ $result['is_power_valid'] ? 'success' : 'danger' }}">
                             <div class="result-label">Мощность резания</div>
                             <div class="result-value">{{ $result['cutting_power'] }} кВт</div>
+                            <div class="result-formula">
+                                P = (M × n) ÷ 9550 = ({{ $result['torque'] }} × {{ $result['spindle_rpm'] }}) ÷ 9550
+                            </div>
                             @if(!$result['is_power_valid'])
                                 <div class="result-warning">⚠ Превышение мощности станка</div>
                             @endif
@@ -407,6 +428,9 @@
                         <div class="result-card">
                             <div class="result-label">Эффективная мощность</div>
                             <div class="result-value">{{ $result['effective_power'] }} кВт</div>
+                            <div class="result-formula">
+                                P<sub>эфф</sub> = P ÷ η = {{ $result['cutting_power'] }} ÷ {{ $result['machine_type_obj']->efficiency ?? 0.85 }}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -418,30 +442,25 @@
                         <div class="result-card">
                             <div class="result-label">Время обработки отверстия</div>
                             <div class="result-value">{{ $result['cutting_time_per_hole'] }} мин</div>
+                            <div class="result-formula">
+                                T = L ÷ F × 1.1 = {{ $result['hole_depth'] }} ÷ {{ $result['feed_rate'] }} × 1.1
+                            </div>
                         </div>
 
                         <div class="result-card">
                             <div class="result-label">Съем материала</div>
                             <div class="result-value">{{ $result['material_removal_rate'] }} см³/мин</div>
-                        </div>
-
-                        <div class="result-card info">
-                            <div class="result-label">Тип операции</div>
-                            <div class="result-value">
-                                {{ $result['operation_type'] == 'roughing' ? '⚒️ Черновая' : '✨ Чистовая' }}
-                            </div>
-                        </div>
-
-                        <div class="result-card info">
-                            <div class="result-label">Охлаждение</div>
-                            <div class="result-value">
-                                {{ $result['coolant_used'] ? '💧 С охлаждением' : '🌵 Без охлаждения' }}
+                            <div class="result-formula">
+                                Q = (π × D² × F) ÷ 4000 = (3.1416 × {{ $result['diameter'] }}² × {{ $result['feed_rate'] }}) ÷ 4000
                             </div>
                         </div>
 
                         <div class="result-card info">
                             <div class="result-label">Корректировка режимов</div>
                             <div class="result-value">-{{ $result['condition_reduction_percent'] }}%</div>
+                            <div class="result-formula">
+                                Коэффициент износа: {{ $result['condition_factor'] }} ({{ $result['years_in_service'] }} лет)
+                            </div>
                             <div class="result-info">Учтено снижение производительности</div>
                         </div>
                     </div>

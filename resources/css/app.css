@@ -29,3 +29,51 @@ body {
     border-bottom: 1px solid #e3e6f0;
     font-weight: 600;
 }
+
+/* Стили для формул в результатах */
+.result-formula {
+    font-size: 0.8em;
+    color: #666;
+    font-family: 'Courier New', monospace;
+    background: #f8f9fa;
+    padding: 6px 8px;
+    border-radius: 4px;
+    margin-top: 6px;
+    border-left: 3px solid #dee2e6;
+    word-break: break-all;
+}
+
+.result-formula sub,
+.result-formula sup {
+    font-size: 0.7em;
+    line-height: 1;
+}
+
+/* Адаптация для мобильных */
+@media (max-width: 768px) {
+    .result-formula {
+        font-size: 0.75em;
+        padding: 4px 6px;
+    }
+}
+
+/* Подсветка формул в карточках */
+.result-card.success .result-formula {
+    border-left-color: #28a745;
+    background: #f8fff9;
+}
+
+.result-card.danger .result-formula {
+    border-left-color: #dc3545;
+    background: #fff8f8;
+}
+
+.result-card.info .result-formula {
+    border-left-color: #17a2b8;
+    background: #f8fcff;
+}
+
+.result-card.highlight .result-formula {
+    border-left-color: #ffc107;
+    background: #fffdf5;
+}

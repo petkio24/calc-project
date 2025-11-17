@@ -33,8 +33,7 @@
                                         </p>
                                         <div class="operation-features">
                                             <span class="feature">Токарные станки</span>
-                                            <span class="feature">Наружная обработка</span>
-                                            <span class="feature">Внутренняя обработка</span>
+                                            <span class="feature">Наружная/Внутренняя обработка</span>
                                         </div>
                                     </div>
                                     <div class="card-hover">
@@ -71,8 +70,7 @@
                                         </p>
                                         <div class="operation-features">
                                             <span class="feature">Сверлильные станки</span>
-                                            <span class="feature">Отверстия</span>
-                                            <span class="feature">Рассверливание</span>
+                                            <span class="feature">Отверстия/Рассверливание</span>
                                         </div>
                                     </div>
                                     <div class="card-hover">
@@ -103,8 +101,7 @@
                                         </p>
                                         <div class="operation-features">
                                             <span class="feature">Фрезерные станки</span>
-                                            <span class="feature">Плоскости</span>
-                                            <span class="feature">Контуры</span>
+                                            <span class="feature">Плоскости/Контуры</span>
                                         </div>
                                     </div>
                                     <div class="card-hover">

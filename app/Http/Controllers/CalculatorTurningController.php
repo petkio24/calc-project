@@ -20,7 +20,7 @@ class CalculatorTurningController extends Controller
         $materials = TurningMaterial::all()->groupBy('material_group');
         $toolMaterials = ToolMaterial::all()->groupBy('material_type');
         $toolGeometries = ToolGeometry::all();
-        $machineTypes = MachineType::all();
+        $machineTypes = MachineType::byCategory('turning')->get();
 
         return view('calculators.turning', [
             'title' => 'Профессиональный калькулятор точения',

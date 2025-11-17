@@ -474,6 +474,9 @@
                         <div class="result-card {{ $result['is_rpm_valid'] ? 'success' : 'danger' }}">
                             <div class="result-label">Обороты шпинделя</div>
                             <div class="result-value">{{ $result['spindle_rpm'] }} об/мин</div>
+                            <div class="result-formula">
+                                n = (1000 × V) ÷ (π × D) = (1000 × {{ $result['cutting_speed'] }}) ÷ (3.1416 × {{ $result['average_diameter'] }})
+                            </div>
                             @if(!$result['is_rpm_valid'])
                                 <div class="result-warning">⚠ Превышение максимальных оборотов станка (макс: {{ $result['machine_type']->max_rpm }} об/мин)</div>
                             @endif
@@ -482,17 +485,26 @@
                         <div class="result-card">
                             <div class="result-label">Скорость резания</div>
                             <div class="result-value">{{ $result['cutting_speed'] }} м/мин</div>
+                            <div class="result-formula">
+                                V = (π × D × n) ÷ 1000 = (3.1416 × {{ $result['average_diameter'] }} × {{ $result['spindle_rpm'] }}) ÷ 1000
+                            </div>
                             <div class="result-info">Макс. для инструмента: {{ $result['tool_material']->max_cutting_speed }} м/мин</div>
                         </div>
 
                         <div class="result-card">
                             <div class="result-label">Подача на оборот</div>
                             <div class="result-value">{{ $result['feed_per_revolution'] }} мм/об</div>
+                            <div class="result-formula">
+                                S = f(материал, геометрия, операция) = {{ $result['feed_per_revolution'] }} мм/об
+                            </div>
                         </div>
 
                         <div class="result-card">
                             <div class="result-label">Минутная подача</div>
                             <div class="result-value">{{ $result['feed_rate'] }} мм/мин</div>
+                            <div class="result-formula">
+                                F = S × n = {{ $result['feed_per_revolution'] }} × {{ $result['spindle_rpm'] }}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -504,6 +516,9 @@
                         <div class="result-card {{ $result['is_power_valid'] ? 'success' : 'danger' }}">
                             <div class="result-label">Мощность резания</div>
                             <div class="result-value">{{ $result['cutting_power'] }} кВт</div>
+                            <div class="result-formula">
+                                P = (V × S × t × K) ÷ 60 = ({{ $result['cutting_speed'] }} × {{ $result['feed_per_revolution'] }} × {{ $result['depth_per_pass'] }} × {{ $result['material']->power_factor }}) ÷ 60
+                            </div>
                             @if(!$result['is_power_valid'])
                                 <div class="result-warning">⚠ Превышение мощности станка (макс: {{ $result['machine_type']->max_power_kw }} кВт)</div>
                             @endif
@@ -512,65 +527,71 @@
                         <div class="result-card">
                             <div class="result-label">Эффективная мощность</div>
                             <div class="result-value">{{ $result['effective_power'] }} кВт</div>
+                            <div class="result-formula">
+                                P<sub>эфф</sub> = P ÷ η = {{ $result['cutting_power'] }} ÷ {{ $result['machine_type']->efficiency ?? 0.85 }}
+                            </div>
                         </div>
 
                         <div class="result-card">
                             <div class="result-label">Усилие резания</div>
                             <div class="result-value">{{ $result['cutting_force'] }} Н</div>
+                            <div class="result-formula">
+                                P = t × s × k = {{ $result['depth_per_pass'] }} × {{ $result['feed_per_revolution'] }} × {{ $result['material']->specific_pressure }}
+                            </div>
                         </div>
 
                         <div class="result-card">
                             <div class="result-label">Крутящий момент</div>
                             <div class="result-value">{{ $result['torque'] }} Н·м</div>
+                            <div class="result-formula">
+                                M = P × D ÷ 2000 = {{ $result['cutting_force'] }} × {{ $result['average_diameter'] }} ÷ 2000
+                            </div>
                         </div>
 
                         <div class="result-card">
                             <div class="result-label">Съем материала</div>
                             <div class="result-value">{{ $result['material_removal_rate'] }} см³/мин</div>
+                            <div class="result-formula">
+                                Q = t × s × V = {{ $result['depth_per_pass'] }} × {{ $result['feed_per_revolution'] }} × {{ $result['cutting_speed'] }}
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Параметры инструмента -->
+                <!-- Геометрические параметры -->
                 <div class="results-section">
-                    <h4 class="section-subtitle">Параметры инструмента</h4>
+                    <h4 class="section-subtitle">Геометрические параметры</h4>
                     <div class="results-grid">
                         <div class="result-card">
-                            <div class="result-label">Форма пластины</div>
-                            <div class="result-value">{{ $result['tool_geometry']->shape_name }}</div>
+                            <div class="result-label">Глубина резания</div>
+                            <div class="result-value">{{ $result['depth_of_cut'] }} мм</div>
+                            <div class="result-formula">
+                                t = (D<sub>исх</sub> - D<sub>кон</sub>) ÷ 2 = ({{ $result['initial_diameter'] }} - {{ $result['final_diameter'] }}) ÷ 2
+                            </div>
                         </div>
 
                         <div class="result-card">
-                            <div class="result-label">Задний угол</div>
-                            <div class="result-value">{{ $result['tool_geometry']->clearance_angle }}°</div>
+                            <div class="result-label">Глубина на проход</div>
+                            <div class="result-value">{{ $result['depth_per_pass'] }} мм</div>
+                            <div class="result-formula">
+                                t<sub>прох</sub> = t ÷ n = {{ $result['depth_of_cut'] }} ÷ {{ $result['number_of_passes'] }}
+                            </div>
                         </div>
 
                         <div class="result-card">
-                            <div class="result-label">Класс точности</div>
-                            <div class="result-value">{{ $result['tool_geometry']->tolerance_class_name }}</div>
+                            <div class="result-label">Количество проходов</div>
+                            <div class="result-value">{{ $result['number_of_passes'] }}</div>
+                            <div class="result-formula">
+                                n = t ÷ t<sub>max</sub> = {{ $result['depth_of_cut'] }} ÷ {{ $result['tool_geometry']->max_depth_of_cut }}
+                            </div>
                         </div>
 
                         <div class="result-card">
-                            <div class="result-label">Длина режущей кромки</div>
-                            <div class="result-value">{{ $result['tool_geometry']->cutting_edge_length }} мм</div>
-                        </div>
-
-                        <div class="result-card">
-                            <div class="result-label">Толщина пластины</div>
-                            <div class="result-value">{{ $result['tool_geometry']->insert_thickness }} мм</div>
-                        </div>
-
-                        <div class="result-card">
-                            <div class="result-label">Радиус скругления</div>
-                            <div class="result-value">R{{ $result['tool_geometry']->corner_radius }}</div>
-                        </div>
-
-                        <div class="result-card {{ $result['is_depth_valid'] ? 'success' : 'danger' }}">
-                            <div class="result-label">Макс. глубина резания</div>
-                            <div class="result-value">{{ $result['tool_geometry']->max_depth_of_cut }} мм</div>
-                            @if(!$result['is_depth_valid'])
-                                <div class="result-warning">⚠ Превышение максимальной глубины резания для инструмента</div>
-                            @endif
+                            <div class="result-label">Средний диаметр</div>
+                            <div class="result-value">{{ $result['average_diameter'] }} мм</div>
+                            <div class="result-formula">
+                                D<sub>ср</sub> = (D<sub>исх</sub> + D<sub>кон</sub>) ÷ 2 = ({{ $result['initial_diameter'] }} + {{ $result['final_diameter'] }}) ÷ 2
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -580,18 +601,19 @@
                     <h4 class="section-subtitle">Время обработки</h4>
                     <div class="results-grid">
                         <div class="result-card">
-                            <div class="result-label">Длина обработки</div>
-                            <div class="result-value">{{ $result['cutting_length'] }} мм</div>
-                        </div>
-
-                        <div class="result-card">
                             <div class="result-label">Время на проход</div>
                             <div class="result-value">{{ $result['cutting_time_per_pass'] }} мин</div>
+                            <div class="result-formula">
+                                T<sub>прох</sub> = L ÷ F × 60 = {{ $result['cutting_length'] }} ÷ {{ $result['feed_rate'] }} × 60
+                            </div>
                         </div>
 
                         <div class="result-card highlight">
                             <div class="result-label">Общее время обработки</div>
                             <div class="result-value">{{ $result['total_cutting_time'] }} мин</div>
+                            <div class="result-formula">
+                                T<sub>общ</sub> = T<sub>прох</sub> × n = {{ $result['cutting_time_per_pass'] }} × {{ $result['number_of_passes'] }}
+                            </div>
                         </div>
                     </div>
                 </div>

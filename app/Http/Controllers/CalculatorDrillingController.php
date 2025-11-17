@@ -17,7 +17,7 @@ class CalculatorDrillingController extends Controller
     {
         $materials = DrillingMaterial::all()->groupBy('material_group');
         $tools = DrillingTool::all();
-        $machineTypes = MachineType::all();
+        $machineTypes = MachineType::byCategory('drilling')->get();
 
         return view('calculators.drilling', [
             'title' => 'Калькулятор сверления',
@@ -120,16 +120,16 @@ class CalculatorDrillingController extends Controller
             return view('calculators.drilling', [
                 'title' => 'Калькулятор сверления',
                 'operation' => 'drilling',
-                'materials' => DrillingMaterial::all(),
+                'materials' => DrillingMaterial::all()->groupBy('material_group'),
                 'tools' => DrillingTool::all(),
                 'machineTypes' => MachineType::all(),
                 'result' => [
-                    // Основные параметры
-                    'material' => $material->name,
-                    'tool' => $tool->name,
+                    'material' => $material,
+                    'tool' => $tool,
                     'diameter' => $diameter,
                     'hole_depth' => $holeDepth,
                     'machine_type' => $machineType->name,
+                    'machine_type_obj' => $machineType, // передаем объект станка
 
                     // Режимы резания
                     'cutting_speed' => round($actualCuttingSpeed, 1),
@@ -155,12 +155,6 @@ class CalculatorDrillingController extends Controller
                     'is_rpm_valid' => $isRpmValid,
                     'is_power_valid' => $isPowerValid,
                     'is_calculations_valid' => $isRpmValid && $isPowerValid,
-
-                    // Информация о материале и инструменте
-                    'material_hardness' => $material->hardness_range,
-                    'tool_type' => $tool->tool_type_name,
-                    'tool_material' => $tool->material_type_name,
-                    'point_angle' => $tool->point_angle,
 
                     // Состояние станка
                     'used_default_machine_type' => $usedDefaultMachineType,
@@ -380,6 +374,7 @@ class CalculatorDrillingController extends Controller
             'rigidity_factor' => 1.0,
             'efficiency' => 0.85,
             'max_power_kw' => 5.5,
+            'machine_category' => 'drilling',
             'years_in_service' => 5,
             'condition_factor' => 0.9,
             'machine_condition' => 'normal'

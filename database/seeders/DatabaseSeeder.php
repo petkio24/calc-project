@@ -21,6 +21,8 @@ class DatabaseSeeder extends Seeder
             DrillingMaterialsSeeder::class,
             DrillingToolsSeeder::class,
             CompleteDrillingMaterialsSeeder::class,
+            MillingMaterialsSeeder::class,
+            MillingToolsSeeder::class,
         ]);
     }
 }
