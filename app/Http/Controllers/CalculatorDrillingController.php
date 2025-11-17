@@ -15,7 +15,7 @@ class CalculatorDrillingController extends Controller
      */
     public function index()
     {
-        $materials = DrillingMaterial::all();
+        $materials = DrillingMaterial::all()->groupBy('material_group');
         $tools = DrillingTool::all();
         $machineTypes = MachineType::all();
 

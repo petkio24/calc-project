@@ -58,13 +58,112 @@
                         <div class="styled-select">
                             <select class="styled-select__input" id="material_id" name="material_id" required>
                                 <option value="">Выберите материал заготовки</option>
-                                @foreach($materials as $material)
-                                    <option value="{{ $material->id }}"
-                                        {{ old('material_id') == $material->id ? 'selected' : '' }}>
-                                        {{ $material->name }} ({{ $material->hardness_range }})
-                                    </option>
-                                @endforeach
+
+                                <!-- Черные металлы -->
+                                <optgroup label="🛠️ Черные металлы">
+                                    @foreach($materials['black_metals'] ?? [] as $material)
+                                        <option value="{{ $material->id }}"
+                                                {{ old('material_id') == $material->id ? 'selected' : '' }}
+                                                data-group="black_metals">
+                                            {{ $material->name }} ({{ $material->hardness_range }})
+                                        </option>
+                                    @endforeach
+                                </optgroup>
+
+                                <!-- Конструкционные стали -->
+                                <optgroup label="⚙️ Конструкционные стали">
+                                    @foreach($materials['carbon_steel'] ?? [] as $material)
+                                        <option value="{{ $material->id }}"
+                                                {{ old('material_id') == $material->id ? 'selected' : '' }}
+                                                data-group="carbon_steel">
+                                            {{ $material->name }} ({{ $material->hardness_range }})
+                                        </option>
+                                    @endforeach
+                                </optgroup>
+
+                                <!-- Легированные стали -->
+                                <optgroup label="🔩 Легированные стали">
+                                    @foreach($materials['alloy_steel'] ?? [] as $material)
+                                        <option value="{{ $material->id }}"
+                                                {{ old('material_id') == $material->id ? 'selected' : '' }}
+                                                data-group="alloy_steel">
+                                            {{ $material->name }} ({{ $material->hardness_range }})
+                                        </option>
+                                    @endforeach
+                                </optgroup>
+
+                                <!-- Цветные металлы -->
+                                <optgroup label="🔶 Цветные металлы">
+                                    @foreach($materials['nonferrous_metals'] ?? [] as $material)
+                                        <option value="{{ $material->id }}"
+                                                {{ old('material_id') == $material->id ? 'selected' : '' }}
+                                                data-group="nonferrous_metals">
+                                            {{ $material->name }} ({{ $material->hardness_range }})
+                                        </option>
+                                    @endforeach
+                                </optgroup>
+
+                                <!-- Алюминиевые сплавы -->
+                                <optgroup label="📦 Алюминиевые сплавы">
+                                    @foreach($materials['aluminum'] ?? [] as $material)
+                                        <option value="{{ $material->id }}"
+                                                {{ old('material_id') == $material->id ? 'selected' : '' }}
+                                                data-group="aluminum">
+                                            {{ $material->name }} ({{ $material->hardness_range }})
+                                        </option>
+                                    @endforeach
+                                </optgroup>
+
+                                <!-- Медные сплавы -->
+                                <optgroup label="🔰 Медные сплавы">
+                                    @foreach($materials['copper_alloy'] ?? [] as $material)
+                                        <option value="{{ $material->id }}"
+                                                {{ old('material_id') == $material->id ? 'selected' : '' }}
+                                                data-group="copper_alloy">
+                                            {{ $material->name }} ({{ $material->hardness_range }})
+                                        </option>
+                                    @endforeach
+                                </optgroup>
+
+                                <!-- Неметаллы -->
+                                <optgroup label="🧪 Неметаллы">
+                                    @foreach($materials['non_metals'] ?? [] as $material)
+                                        <option value="{{ $material->id }}"
+                                                {{ old('material_id') == $material->id ? 'selected' : '' }}
+                                                data-group="non_metals">
+                                            {{ $material->name }} ({{ $material->hardness_range }})
+                                        </option>
+                                    @endforeach
+                                </optgroup>
+
+                                <!-- Пластмассы -->
+                                <optgroup label="🧩 Пластмассы">
+                                    @foreach($materials['plastics'] ?? [] as $material)
+                                        <option value="{{ $material->id }}"
+                                                {{ old('material_id') == $material->id ? 'selected' : '' }}
+                                                data-group="plastics">
+                                            {{ $material->name }} ({{ $material->hardness_range }})
+                                        </option>
+                                    @endforeach
+                                </optgroup>
                             </select>
+                            <div class="styled-select__arrow">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="6 9 12 15 18 9"></polyline>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="material-preview" id="materialPreview" style="display: none;">
+                            <div class="material-preview__content">
+                                <strong id="previewMaterialName"></strong>
+                                <div class="material-preview__details">
+                                    <span id="previewMaterialGroup"></span> •
+                                    <span id="previewMaterialHardness"></span>
+                                </div>
+                                <div class="material-preview__speed">
+                                    Скорость резания: <span id="previewMaterialSpeed"></span> м/мин
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -406,6 +505,73 @@
                     }
                 });
             }
+
+            // Превью материала (как в точении)
+            const materialSelect = document.getElementById('material_id');
+            const materialPreview = document.getElementById('materialPreview');
+
+            // Данные материалов
+            const materialsData = {
+                @foreach($materials->flatten() as $material)
+                    {{ $material->id }}: {
+                    name: "{{ $material->name }}",
+                    group: "{{ $material->material_group_name }}",
+                    hardness: "{{ $material->hardness_range }}",
+                    speed: "{{ $material->cutting_speed_min }}-{{ $material->cutting_speed_max }}"
+                },
+                @endforeach
+            };
+
+            function updateMaterialPreview() {
+                const selectedId = materialSelect.value;
+                if (selectedId && materialsData[selectedId]) {
+                    const material = materialsData[selectedId];
+                    document.getElementById('previewMaterialName').textContent = material.name;
+                    document.getElementById('previewMaterialGroup').textContent = material.group;
+                    document.getElementById('previewMaterialHardness').textContent = material.hardness;
+                    document.getElementById('previewMaterialSpeed').textContent = material.speed;
+                    materialPreview.style.display = 'block';
+                } else {
+                    materialPreview.style.display = 'none';
+                }
+            }
+
+            materialSelect.addEventListener('change', updateMaterialPreview);
+            updateMaterialPreview(); // Инициализация
+
+            // Стилизация optgroup
+            const style = document.createElement('style');
+            style.textContent = `
+                .styled-select__input optgroup {
+                    font-weight: bold;
+                    color: #333;
+                    background-color: #f8f9fa;
+                }
+                .styled-select__input option {
+                    padding: 8px 12px;
+                }
+                .material-preview {
+                    margin-top: 8px;
+                    padding: 12px;
+                    background: #f8f9fa;
+                    border-radius: 6px;
+                    border-left: 4px solid #007bff;
+                }
+                .material-preview__content strong {
+                    color: #333;
+                }
+                .material-preview__details {
+                    font-size: 0.9em;
+                    color: #666;
+                    margin: 4px 0;
+                }
+                .material-preview__speed {
+                    font-size: 0.9em;
+                    color: #007bff;
+                    font-weight: 500;
+                }
+            `;
+            document.head.appendChild(style);
         });
     </script>
 @endsection

@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             UpdateOperationFactorsSeeder::class,
             DrillingMaterialsSeeder::class,
             DrillingToolsSeeder::class,
+            CompleteDrillingMaterialsSeeder::class,
         ]);
     }
 }

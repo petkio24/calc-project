@@ -24,4 +24,19 @@ class DrillingMaterial extends Model
         'thermal_conductivity',
         'description'
     ];
+
+    // Геттеры для удобства
+    public function getMaterialGroupNameAttribute()
+    {
+        return [
+            'black_metals' => '🛠️ Черные металлы',
+            'nonferrous_metals' => '🔶 Цветные металлы',
+            'non_metals' => '🧪 Неметаллы',
+            'carbon_steel' => '⚙️ Конструкционные стали',
+            'alloy_steel' => '🔩 Легированные стали',
+            'aluminum' => '📦 Алюминиевые сплавы',
+            'copper_alloy' => '🔰 Медные сплавы',
+            'plastics' => '🧩 Пластмассы'
+        ][$this->material_group] ?? $this->material_group;
+    }
 }
