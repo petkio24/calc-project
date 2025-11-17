@@ -151,3 +151,130 @@ function initDrillingCalculator() {
 document.addEventListener('DOMContentLoaded', function() {
     initDrillingCalculator();
 });
+
+// Функциональность для справочников
+document.addEventListener('DOMContentLoaded', function() {
+    // Фильтрация таблиц
+    initTableFilters();
+
+    // Поиск в реальном времени
+    initLiveSearch();
+
+    // Сортировка таблиц
+    initTableSorting();
+
+    // Экспорт данных
+    initExportButtons();
+});
+
+function initTableFilters() {
+    const filterInputs = document.querySelectorAll('.table-filter');
+
+    filterInputs.forEach(input => {
+        input.addEventListener('input', function() {
+            const filterValue = this.value.toLowerCase();
+            const table = this.closest('.data-section').querySelector('.data-table');
+            const rows = table.querySelectorAll('tbody tr');
+
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(filterValue) ? '' : 'none';
+            });
+        });
+    });
+}
+
+function initLiveSearch() {
+    const searchInput = document.querySelector('.search-box input');
+    if (!searchInput) return;
+
+    let timeout;
+    searchInput.addEventListener('input', function() {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
+            // Здесь можно добавить AJAX-поиск
+            console.log('Search:', this.value);
+        }, 300);
+    });
+}
+
+function initTableSorting() {
+    const sortableHeaders = document.querySelectorAll('.data-table th[data-sort]');
+
+    sortableHeaders.forEach(header => {
+        header.style.cursor = 'pointer';
+        header.addEventListener('click', function() {
+            const table = this.closest('.data-table');
+            const columnIndex = this.cellIndex;
+            const isNumeric = this.dataset.sort === 'numeric';
+            const isAscending = !this.classList.contains('asc');
+
+            sortTable(table, columnIndex, isNumeric, isAscending);
+
+            // Обновление классов
+            sortableHeaders.forEach(h => h.classList.remove('asc', 'desc'));
+            this.classList.toggle('asc', isAscending);
+            this.classList.toggle('desc', !isAscending);
+        });
+    });
+}
+
+function sortTable(table, columnIndex, isNumeric, ascending) {
+    const tbody = table.querySelector('tbody');
+    const rows = Array.from(tbody.querySelectorAll('tr'));
+
+    rows.sort((a, b) => {
+        let aValue = a.cells[columnIndex].textContent.trim();
+        let bValue = b.cells[columnIndex].textContent.trim();
+
+        if (isNumeric) {
+            aValue = parseFloat(aValue) || 0;
+            bValue = parseFloat(bValue) || 0;
+        }
+
+        if (aValue < bValue) return ascending ? -1 : 1;
+        if (aValue > bValue) return ascending ? 1 : -1;
+        return 0;
+    });
+
+    // Очистка и перезапись строк
+    rows.forEach(row => tbody.appendChild(row));
+}
+
+function initExportButtons() {
+    const exportButtons = document.querySelectorAll('.export-btn');
+
+    exportButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const table = this.closest('.data-section').querySelector('.data-table');
+            exportTableToCSV(table, 'справочник.csv');
+        });
+    });
+}
+
+function exportTableToCSV(table, filename) {
+    const rows = table.querySelectorAll('tr');
+    const csv = [];
+
+    rows.forEach(row => {
+        const rowData = [];
+        row.querySelectorAll('th, td').forEach(cell => {
+            rowData.push(`"${cell.textContent.replace(/"/g, '""')}"`);
+        });
+        csv.push(rowData.join(','));
+    });
+
+    const csvString = csv.join('\n');
+    const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+
+    if (link.download !== undefined) {
+        const url = URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', filename);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+}

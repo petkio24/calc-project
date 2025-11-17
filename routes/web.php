@@ -19,14 +19,25 @@ Route::get('/home', [HomeController::class, 'index'])->name('home');
 // Защищаем все остальные маршруты аутентификацией
 Route::middleware(['auth'])->group(function () {
     // Маршруты справочников
-    Route::prefix('references')->group(function () {
-        Route::get('/', [ReferenceController::class, 'index'])->name('references.index');
-        Route::get('/drilling-materials', [ReferenceController::class, 'drillingMaterials'])->name('references.drilling-materials');
-        Route::get('/turning-materials', [ReferenceController::class, 'turningMaterials'])->name('references.turning-materials');
-        Route::get('/milling-materials', [ReferenceController::class, 'millingMaterials'])->name('references.milling-materials');
-        Route::get('/tool-materials', [ReferenceController::class, 'toolMaterials'])->name('references.tool-materials');
-        Route::get('/tool-geometries', [ReferenceController::class, 'toolGeometries'])->name('references.tool-geometries');
-        Route::get('/machine-types', [ReferenceController::class, 'machineTypes'])->name('references.machine-types');
+    Route::prefix('references')->name('references.')->group(function () {
+        Route::get('/', [ReferenceController::class, 'index'])->name('index');
+
+        // Материалы
+        Route::get('/turning-materials', [ReferenceController::class, 'turningMaterials'])->name('turning-materials');
+        Route::get('/drilling-materials', [ReferenceController::class, 'drillingMaterials'])->name('drilling-materials');
+        Route::get('/milling-materials', [ReferenceController::class, 'millingMaterials'])->name('milling-materials');
+
+        // Инструменты
+        Route::get('/tool-materials', [ReferenceController::class, 'toolMaterials'])->name('tool-materials');
+        Route::get('/tool-geometries', [ReferenceController::class, 'toolGeometries'])->name('tool-geometries');
+        Route::get('/drilling-tools', [ReferenceController::class, 'drillingTools'])->name('drilling-tools');
+        Route::get('/milling-tools', [ReferenceController::class, 'millingTools'])->name('milling-tools');
+
+        // Станки
+        Route::get('/machine-types', [ReferenceController::class, 'machineTypes'])->name('machine-types');
+
+        // Поиск
+        Route::get('/search', [ReferenceController::class, 'search'])->name('search');
     });
 
     // Маршруты калькуляторов
