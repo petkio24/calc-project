@@ -1,6 +1,7 @@
 /* Bootstrap */
 @import 'bootstrap/dist/css/bootstrap.min.css';
 @import url('./components/navbar.css');
+@import url('./components/history.css');
 @import url('./components/home.css');
 @import url('./components/calculator_drilling.css');
 @import url('./components/calculator_turning.css');

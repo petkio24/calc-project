@@ -3,13 +3,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Traits\SavesCalculationHistory;
 use Illuminate\Http\Request;
 use App\Models\DrillingMaterial;
 use App\Models\DrillingTool;
 use App\Models\MachineType;
+use Illuminate\Support\Facades\Auth;
 
 class CalculatorDrillingController extends Controller
 {
+    use SavesCalculationHistory;
     /**
      * Показываем калькулятор сверления
      */
@@ -116,6 +119,47 @@ class CalculatorDrillingController extends Controller
             // Флаги использования значений по умолчанию
             $usedDefaultMachineType = !$request->machine_type_id;
             $usedCustomAge = $request->machine_age === 'custom';
+
+            $user = Auth::user();
+            if ($user) {
+                $title = "Сверление: {$material->name} - Ø{$diameter}мм";
+
+                $inputParameters = [
+                    'material_id' => $request->material_id,
+                    'tool_id' => $request->tool_id,
+                    'diameter' => $diameter,
+                    'hole_depth' => $holeDepth,
+                    'machine_type_id' => $request->machine_type_id,
+                    'operation_type' => $operationType,
+                    'coolant_used' => $coolantUsed,
+                    'machine_age' => $request->machine_age,
+                    'custom_years' => $request->custom_years
+                ];
+
+                $calculationResults = [
+                    'material' => [
+                        'name' => $material->name,
+                        'group' => $material->material_group_name,
+                        'hardness' => $material->hardness_range
+                    ],
+                    'tool' => [
+                        'name' => $tool->name,
+                        'type' => $tool->tool_type_name
+                    ],
+                    'cutting_speed' => round($actualCuttingSpeed, 1),
+                    'feed_per_revolution' => round($feedPerRevolution, 4),
+                    'spindle_rpm' => round($spindleRPM),
+                    'feed_rate' => round($feedRate, 1),
+                    'thrust_force' => round($thrustForce, 1),
+                    'torque' => round($torque, 2),
+                    'cutting_power' => round($cuttingPower, 2),
+                    'effective_power' => round($effectivePower, 2),
+                    'cutting_time_per_hole' => round($cuttingTimePerHole, 2),
+                    'material_removal_rate' => round($materialRemovalRate, 2)
+                ];
+
+                $this->saveToHistory('drilling', $title, $inputParameters, $calculationResults);
+            }
 
             return view('calculators.drilling', [
                 'title' => 'Калькулятор сверления',

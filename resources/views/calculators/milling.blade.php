@@ -2,10 +2,6 @@
 
 @section('title', 'Профессиональный калькулятор фрезерования')
 
-@section('styles')
-    <link href="{{ asset('css/calculator_milling.css') }}" rel="stylesheet">
-@endsection
-
 @section('content')
     <div class="calculator-container">
         <!-- Хлебные крошки -->

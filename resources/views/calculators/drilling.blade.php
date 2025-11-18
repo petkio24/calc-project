@@ -2,10 +2,6 @@
 
 @section('title', 'Профессиональный калькулятор сверления')
 
-@section('styles')
-    <link href="{{ asset('css/calculator_drilling.css') }}" rel="stylesheet">
-@endsection
-
 @section('content')
     <div class="calculator-container">
         <!-- Хлебные крошки -->

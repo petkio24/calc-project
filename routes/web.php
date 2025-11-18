@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CalculationHistoryController;
 use App\Http\Controllers\CalculatorDrillingController;
 use App\Http\Controllers\CalculatorMillingController;
 use App\Http\Controllers\CalculatorTurningController;
@@ -38,6 +39,13 @@ Route::middleware(['auth'])->group(function () {
 
         // Поиск
         Route::get('/search', [ReferenceController::class, 'search'])->name('search');
+    });
+
+    Route::prefix('history')->name('history.')->group(function () {
+        Route::get('/', [CalculationHistoryController::class, 'index'])->name('index');
+        Route::get('/{id}', [CalculationHistoryController::class, 'show'])->name('show');
+        Route::put('/{id}', [CalculationHistoryController::class, 'update'])->name('update');
+        Route::delete('/{id}', [CalculationHistoryController::class, 'destroy'])->name('destroy');
     });
 
     // Маршруты калькуляторов

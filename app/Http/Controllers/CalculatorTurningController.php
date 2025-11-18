@@ -3,15 +3,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Traits\SavesCalculationHistory;
 use Illuminate\Http\Request;
 use App\Models\TurningMaterial;
 use App\Models\ToolMaterial;
 use App\Models\ToolGeometry;
 use App\Models\MachineType;
 use App\Models\OperationFactor;
+use Illuminate\Support\Facades\Auth;
 
 class CalculatorTurningController extends Controller
 {
+    use SavesCalculationHistory;
     /**
      * Показываем калькулятор точения
      */
@@ -149,6 +152,114 @@ class CalculatorTurningController extends Controller
             $usedDefaultMachineType = !$request->machine_type_id;
             $usedCustomAge = $request->machine_age === 'custom';
 
+            $result = [
+                // Основные параметры
+                'material' => $material,
+                'tool_material' => $toolMaterial,
+                'tool_geometry' => $toolGeometry,
+                'machine_type' => $machineType,
+                'initial_diameter' => $initialDiameter,
+                'final_diameter' => $finalDiameter,
+                'cutting_length' => $cuttingLength,
+
+                // Геометрические параметры
+                'depth_of_cut' => round($depthOfCut, 3),
+                'depth_per_pass' => round($depthPerPass, 3),
+                'number_of_passes' => $passes,
+                'average_diameter' => round($averageDiameter, 2),
+
+                // Режимы резания
+                'cutting_speed' => round($actualCuttingSpeed, 1),
+                'feed_per_revolution' => round($feedPerRevolution, 4),
+                'spindle_rpm' => round($spindleRPM),
+                'feed_rate' => round($feedRate, 1),
+
+                // Мощность и силовые параметры
+                'cutting_power' => round($cuttingPower, 2),
+                'effective_power' => round($effectivePower, 2),
+                'cutting_force' => round($cuttingForce, 1),
+                'torque' => round($torque, 1),
+                'material_removal_rate' => round($materialRemovalRate, 2),
+
+                // Время обработки
+                'cutting_time_per_pass' => round($cuttingTimePerPass, 2),
+                'total_cutting_time' => round($totalCuttingTime, 2),
+
+                // Новые параметры из документа
+                'operation_type' => $operationType,
+                'operation_subtype' => $operationSubtype,
+                'operation_subtype_name' => $operationSubtype == 'external_turning' ? 'Наружное точение' : 'Растачивание',
+                'surface_quality' => $surfaceQuality,
+                'is_feed_radius_compatible' => $isFeedRadiusCompatible,
+                'recommended_radius' => $recommendedRadius,
+
+                // Проверки и статусы
+                'is_rpm_valid' => $isRpmValid,
+                'is_power_valid' => $isPowerValid,
+                'is_depth_valid' => $isDepthValid,
+
+                // Флаги значений по умолчанию
+                'used_default_machine_type' => $usedDefaultMachineType,
+
+                'machine_age' => $request->machine_age,
+                'custom_years' => $request->custom_years,
+                'years_in_service' => $machineType->years_in_service,
+                'machine_condition' => $machineType->machine_condition,
+                'condition_factor' => $machineType->condition_factor,
+                'condition_reduction_percent' => round((1 - $machineType->condition_factor) * 100),
+                'used_custom_age' => $usedCustomAge,
+            ];
+
+            $user = Auth::user();
+            if ($user) {
+                $title = "Точение: {$material->name} - Ø{$initialDiameter}→Ø{$finalDiameter}мм";
+
+                $inputParameters = [
+                    'material_id' => $request->material_id,
+                    'tool_material_id' => $request->tool_material_id,
+                    'tool_geometry_id' => $request->tool_geometry_id,
+                    'initial_diameter' => $initialDiameter,
+                    'final_diameter' => $finalDiameter,
+                    'cutting_length' => $cuttingLength,
+                    'allowance' => $allowance,
+                    'operation_type' => $operationType,
+                    'operation_subtype' => $operationSubtype,
+                    'surface_quality' => $surfaceQuality,
+                    'machine_type_id' => $request->machine_type_id,
+                    'machine_age' => $request->machine_age,
+                    'custom_years' => $request->custom_years
+                ];
+
+                $calculationResults = [
+                    'material' => [
+                        'name' => $material->name,
+                        'group' => $material->material_group_name,
+                        'hardness' => $material->hardness_range
+                    ],
+                    'tool_material' => [
+                        'name' => $toolMaterial->name,
+                        'type' => $toolMaterial->material_type_name
+                    ],
+                    'tool_geometry' => [
+                        'name' => $toolGeometry->name,
+                        'shape' => $toolGeometry->shape_name
+                    ],
+                    'cutting_speed' => round($actualCuttingSpeed, 1),
+                    'feed_per_revolution' => round($feedPerRevolution, 4),
+                    'spindle_rpm' => round($spindleRPM),
+                    'feed_rate' => round($feedRate, 1),
+                    'cutting_power' => round($cuttingPower, 2),
+                    'effective_power' => round($effectivePower, 2),
+                    'depth_of_cut' => round($depthOfCut, 3),
+                    'depth_per_pass' => round($depthPerPass, 3),
+                    'number_of_passes' => $passes,
+                    'total_cutting_time' => round($totalCuttingTime, 2)
+                ];
+
+                // ВЫЗОВ ТРЕЙТА ДЛЯ СОХРАНЕНИЯ
+                $this->saveToHistory('turning', $title, $inputParameters, $calculationResults);
+            }
+
             return view('calculators.turning', [
                 'title' => 'Профессиональный калькулятор точения',
                 'operation' => 'turning',
@@ -156,63 +267,7 @@ class CalculatorTurningController extends Controller
                 'toolMaterials' => ToolMaterial::all()->groupBy('material_type'),
                 'toolGeometries' => ToolGeometry::all(),
                 'machineTypes' => MachineType::all(),
-                'result' => [
-                    // Основные параметры
-                    'material' => $material,
-                    'tool_material' => $toolMaterial,
-                    'tool_geometry' => $toolGeometry,
-                    'machine_type' => $machineType,
-                    'initial_diameter' => $initialDiameter,
-                    'final_diameter' => $finalDiameter,
-                    'cutting_length' => $cuttingLength,
-
-                    // Геометрические параметры
-                    'depth_of_cut' => round($depthOfCut, 3),
-                    'depth_per_pass' => round($depthPerPass, 3),
-                    'number_of_passes' => $passes,
-                    'average_diameter' => round($averageDiameter, 2),
-
-                    // Режимы резания
-                    'cutting_speed' => round($actualCuttingSpeed, 1),
-                    'feed_per_revolution' => round($feedPerRevolution, 4),
-                    'spindle_rpm' => round($spindleRPM),
-                    'feed_rate' => round($feedRate, 1),
-
-                    // Мощность и силовые параметры
-                    'cutting_power' => round($cuttingPower, 2),
-                    'effective_power' => round($effectivePower, 2),
-                    'cutting_force' => round($cuttingForce, 1),
-                    'torque' => round($torque, 1),
-                    'material_removal_rate' => round($materialRemovalRate, 2),
-
-                    // Время обработки
-                    'cutting_time_per_pass' => round($cuttingTimePerPass, 2),
-                    'total_cutting_time' => round($totalCuttingTime, 2),
-
-                    // Новые параметры из документа
-                    'operation_type' => $operationType,
-                    'operation_subtype' => $operationSubtype,
-                    'operation_subtype_name' => $operationSubtype == 'external_turning' ? 'Наружное точение' : 'Растачивание',
-                    'surface_quality' => $surfaceQuality,
-                    'is_feed_radius_compatible' => $isFeedRadiusCompatible,
-                    'recommended_radius' => $recommendedRadius,
-
-                    // Проверки и статусы
-                    'is_rpm_valid' => $isRpmValid,
-                    'is_power_valid' => $isPowerValid,
-                    'is_depth_valid' => $isDepthValid,
-
-                    // Флаги значений по умолчанию
-                    'used_default_machine_type' => $usedDefaultMachineType,
-
-                    'machine_age' => $request->machine_age,
-                    'custom_years' => $request->custom_years,
-                    'years_in_service' => $machineType->years_in_service,
-                    'machine_condition' => $machineType->machine_condition,
-                    'condition_factor' => $machineType->condition_factor,
-                    'condition_reduction_percent' => round((1 - $machineType->condition_factor) * 100),
-                    'used_custom_age' => $usedCustomAge,
-                ]
+                'result' => $result,
             ]);
 
         } catch (\Exception $e) {

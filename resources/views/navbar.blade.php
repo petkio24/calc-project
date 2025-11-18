@@ -17,8 +17,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link nav-item-main" href="#">История расчетов</a>
-                    </li>
+                        <a class="nav-link nav-item-main" href="{{ route('history.index') }}">История расчетов</a>                    </li>
                 @else
                     <li class="nav-item">
                         <a class="nav-link nav-item-main" href="{{ route('login') }}">Вход</a>

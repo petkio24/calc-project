@@ -2,10 +2,6 @@
 
 @section('title', 'Профессиональный калькулятор точения')
 
-@section('styles')
-    <link href="{{ asset('css/calculator_turning.css') }}" rel="stylesheet">
-@endsection
-
 @section('content')
     <div class="calculator-container">
         <!-- Хлебные крошки -->

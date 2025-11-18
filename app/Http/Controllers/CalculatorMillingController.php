@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Traits\SavesCalculationHistory;
 use Illuminate\Http\Request;
 use App\Models\MillingMaterial;
 use App\Models\MillingTool;
 use App\Models\MachineType;
+use Illuminate\Support\Facades\Auth;
 
 class CalculatorMillingController extends Controller
 {
+    use SavesCalculationHistory;
     /**
      * Показываем калькулятор фрезерования
      */
@@ -130,6 +133,48 @@ class CalculatorMillingController extends Controller
 
             // Флаги использования значений по умолчанию
             $usedDefaultMachineType = !$request->machine_type_id;
+
+            $user = Auth::user();
+            if ($user) {
+                $title = "Фрезерование: {$material->name} - Ø{$cutterDiameter}мм";
+
+                $inputParameters = [
+                    'material_id' => $request->material_id,
+                    'tool_id' => $request->tool_id,
+                    'cutter_diameter' => $cutterDiameter,
+                    'number_of_teeth' => $numberOfTeeth,
+                    'width_of_cut' => $widthOfCut,
+                    'depth_of_cut' => $depthOfCut,
+                    'operation_type' => $operationType,
+                    'machine_type_id' => $request->machine_type_id,
+                    'machine_age' => $request->machine_age,
+                    'custom_years' => $request->custom_years,
+                    'coolant_used' => $coolantUsed
+                ];
+
+                $calculationResults = [
+                    'material' => [
+                        'name' => $material->name,
+                        'group' => $material->material_group_name,
+                        'hardness' => $material->hardness_range
+                    ],
+                    'tool' => [
+                        'name' => $tool->name,
+                        'type' => $tool->tool_type_name
+                    ],
+                    'cutting_speed' => round($actualCuttingSpeed, 1),
+                    'feed_per_tooth' => round($feedPerTooth, 4),
+                    'feed_per_revolution' => round($feedPerRevolution, 3),
+                    'spindle_rpm' => round($spindleRPM),
+                    'feed_rate' => round($feedRate, 1),
+                    'cutting_power' => round($cuttingPower, 2),
+                    'effective_power' => round($effectivePower, 2),
+                    'material_removal_rate' => round($materialRemovalRate, 2),
+                    'cutting_time' => round($cuttingTime, 2)
+                ];
+
+                $this->saveToHistory('milling', $title, $inputParameters, $calculationResults);
+            }
 
             return view('calculators.milling', [
                 'title' => 'Профессиональный калькулятор фрезерования',
