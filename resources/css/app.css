@@ -8,6 +8,7 @@
 @import url('./components/calculator_milling.css');
 @import url('./references.css');
 @import url('./auth.css');
+
 /* Custom CSS */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -31,16 +32,15 @@ body {
     font-weight: 600;
 }
 
-/* Стили для формул в результатах */
+/* Simplified styles for formulas in results - no borders */
 .result-formula {
-    font-size: 0.8em;
-    color: #666;
+    font-size: 0.75em;
+    color: #9ca3af;
     font-family: 'Courier New', monospace;
     background: #f8f9fa;
     padding: 6px 8px;
     border-radius: 4px;
     margin-top: 6px;
-    border-left: 3px solid #dee2e6;
     word-break: break-all;
 }
 
@@ -50,31 +50,27 @@ body {
     line-height: 1;
 }
 
-/* Адаптация для мобильных */
+/* Responsive */
 @media (max-width: 768px) {
     .result-formula {
-        font-size: 0.75em;
+        font-size: 0.7em;
         padding: 4px 6px;
     }
 }
 
-/* Подсветка формул в карточках */
+/* Simple formula backgrounds without borders */
 .result-card.success .result-formula {
-    border-left-color: #28a745;
-    background: #f8fff9;
+    background: #ecfdf5;
 }
 
 .result-card.danger .result-formula {
-    border-left-color: #dc3545;
-    background: #fff8f8;
+    background: #fef2f2;
 }
 
 .result-card.info .result-formula {
-    border-left-color: #17a2b8;
-    background: #f8fcff;
+    background: #eff6ff;
 }
 
 .result-card.highlight .result-formula {
-    border-left-color: #ffc107;
-    background: #fffdf5;
+    background: #fffbeb;
 }

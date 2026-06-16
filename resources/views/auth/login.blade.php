@@ -57,12 +57,6 @@
                     </button>
 
                     <div class="auth-links">
-                        @if (Route::has('password.request'))
-                            <a class="auth-link" href="{{ route('password.request') }}">
-                                Забыли пароль?
-                            </a>
-                        @endif
-
                         @if (Route::has('register'))
                             <a class="auth-link" href="{{ route('register') }}">
                                 Создать аккаунт

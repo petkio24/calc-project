@@ -350,28 +350,44 @@ class CalculatorTurningController extends Controller
     {
         if ($depthOfCut <= 0) return 1;
 
-        $maxDepthPerPass = $toolGeometry->max_depth_of_cut ?: 2.0;
+        // Максимальная глубина резания для инструмента (по умолчанию 3 мм)
+        $maxDepthPerPass = $toolGeometry->max_depth_of_cut ?: 3.0;
 
-        // Коэффициенты для разных типов обработки
+        // Корректировка в зависимости от типа операции
         if ($operationType === 'roughing') {
-            $maxDepthPerPass *= 0.8; // Для черновой обработки берем 80% от максимума
+            // Для черновой обработки можно снимать до 80-100% от максимума инструмента
+            $maxDepthPerPass = $maxDepthPerPass * 0.9;
         } else {
-            $maxDepthPerPass *= 0.3; // Для чистовой - 30%
+            // Для чистовой обработки снимаем 20-40% от максимума
+            $maxDepthPerPass = $maxDepthPerPass * 0.35;
         }
 
-        // Дополнительный коэффициент для растачивания
+        // Для растачивания (внутренняя обработка) уменьшаем глубину
         if ($operationSubtype === 'internal_turning') {
-            $maxDepthPerPass *= 0.7; // Для растачивания уменьшаем глубину
+            $maxDepthPerPass = $maxDepthPerPass * 0.7;
         }
 
-        $passes = ceil($depthOfCut / max(0.001, $maxDepthPerPass));
-        return max(1, $passes);
-    }
+        // Минимальная глубина за 1 проход - не менее 0.05 мм
+        $maxDepthPerPass = max(0.05, $maxDepthPerPass);
 
+        // Если общая глубина меньше максимальной за проход - 1 проход
+        if ($depthOfCut <= $maxDepthPerPass) {
+            return 1;
+        }
+
+        // Иначе считаем количество проходов
+        $passes = ceil($depthOfCut / $maxDepthPerPass);
+
+        // Ограничиваем максимальное количество проходов (разумный предел)
+        return min($passes, 10);
+    }
     // 3. Расчет глубины резания на проход
     private function calculateDepthPerPass($depthOfCut, $passes)
     {
-        if ($passes <= 0) return 0;
+        if ($passes <= 0) return $depthOfCut;
+        if ($depthOfCut <= 0) return 0;
+
+        // Равномерное распределение глубины по проходам
         return $depthOfCut / $passes;
     }
 

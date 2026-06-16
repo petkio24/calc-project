@@ -59,7 +59,7 @@
 }
 
 .history-filters {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: #667eea;
     padding: 25px;
     border-radius: 12px;
     margin-bottom: 30px;
@@ -69,7 +69,6 @@
 .filter-form-history {
     display: flex;
     gap: 25px;
-    /*align-items: center;*/
     flex-wrap: wrap;
 }
 
@@ -141,26 +140,19 @@
 }
 
 .calculation-item::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 4px;
-    height: 100%;
-    background: #bdc3c7;
-    transition: background 0.3s ease;
+    display: none;
 }
 
-.calculation-item.turning::before {
-    background: #3498db;
+.calculation-item.turning {
+    border-left: 4px solid #3498db;
 }
 
-.calculation-item.milling::before {
-    background: #9b59b6;
+.calculation-item.milling {
+    border-left: 4px solid #9b59b6;
 }
 
-.calculation-item.drilling::before {
-    background: #27ae60;
+.calculation-item.drilling {
+    border-left: 4px solid #27ae60;
 }
 
 .calculation-item:hover {
@@ -171,11 +163,11 @@
 
 .calculation-item.favorite {
     border-left: 4px solid #f1c40f;
-    background: linear-gradient(135deg, #fffdf0 0%, #fff9e6 100%);
+    background: #fffdf0;
 }
 
 .calculation-item.favorite::before {
-    background: #f1c40f;
+    display: none;
 }
 
 .calculation-header {
@@ -294,7 +286,7 @@
 
 .calculation-notes {
     padding: 15px;
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    background: #f8f9fa;
     border-radius: 8px;
     font-size: 14px;
     color: #5a6c7d;
@@ -341,7 +333,6 @@
     justify-content: center;
 }
 
-/* Стили для пагинации Bootstrap */
 .pagination {
     gap: 8px;
 }
@@ -365,23 +356,6 @@
     border-color: #3498db;
 }
 
-/* Анимации */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.calculation-item {
-    animation: fadeIn 0.5s ease-out;
-}
-
-/* Адаптивность */
 @media (max-width: 768px) {
     .history-container {
         padding: 15px;
@@ -550,7 +524,7 @@
 }
 
 .result-card.highlight {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: #667eea;
     color: white;
     border: none;
 }
@@ -604,7 +578,6 @@
     background: #c0392b;
 }
 
-/* Адаптивность для детальной страницы */
 @media (max-width: 768px) {
     .calculation-detail {
         padding: 20px 15px;

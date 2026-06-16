@@ -1,4 +1,4 @@
-/* Modern Calculator Milling Styles - Compact */
+/* Professional Calculator Drilling Styles - Clean & Minimal */
 .calculator-container {
     max-width: 1200px;
     margin: 0 auto;
@@ -12,10 +12,10 @@
     align-items: center;
     margin-bottom: 1.5rem;
     font-size: 0.9rem;
-    background: #f8f9ff;
+    background: #f8f9fa;
     padding: 0.8rem 1.2rem;
     border-radius: 8px;
-    border: 1px solid #e3e8ff;
+    border: 1px solid #e9ecef;
 }
 
 .calc-breadcrumbs__item {
@@ -36,7 +36,7 @@
 
 .calc-breadcrumbs__separator {
     margin: 0 0.6rem;
-    color: #a0a7b8;
+    color: #adb5bd;
     font-weight: 300;
 }
 
@@ -47,7 +47,6 @@
     padding: 1.5rem 2rem;
     border-radius: 12px;
     margin-bottom: 1.5rem;
-    box-shadow: 0 4px 12px rgba(30, 60, 114, 0.3);
 }
 
 .calc-header h1 {
@@ -78,12 +77,11 @@
     padding: 1.5rem;
     border-radius: 10px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-    border: 1px solid #f0f4ff;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border: 1px solid #e9ecef;
+    transition: box-shadow 0.2s ease;
 }
 
 .calc-section:hover {
-    transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
 }
 
@@ -93,7 +91,7 @@
     color: #2c3e50;
     margin-bottom: 1.2rem;
     padding-bottom: 0.5rem;
-    border-bottom: 2px solid #f0f4ff;
+    border-bottom: 2px solid #e9ecef;
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -136,11 +134,11 @@
 .calc-input-group__input {
     width: 100%;
     padding: 0.8rem 1rem;
-    border: 2px solid #e8edff;
+    border: 2px solid #e9ecef;
     border-radius: 8px;
     font-size: 1rem;
     transition: all 0.2s ease;
-    background: #fafbff;
+    background: #fafbfc;
     font-weight: 500;
     color: #2c3e50;
 }
@@ -153,7 +151,7 @@
 }
 
 .calc-input-group__input::placeholder {
-    color: #a0a7b8;
+    color: #adb5bd;
     font-weight: 400;
 }
 
@@ -165,10 +163,10 @@
 .styled-select__input {
     width: 100%;
     padding: 0.8rem 3rem 0.8rem 1rem;
-    border: 2px solid #e8edff;
+    border: 2px solid #e9ecef;
     border-radius: 8px;
     font-size: 1rem;
-    background: #fafbff;
+    background: #fafbfc;
     font-weight: 500;
     color: #2c3e50;
     appearance: none;
@@ -212,9 +210,8 @@
 .tool-info {
     margin-top: 0.5rem;
     padding: 0.8rem;
-    background: #f8f9ff;
+    background: #f8f9fa;
     border-radius: 6px;
-    border-left: 3px solid #4e73df;
     font-size: 0.85rem;
 }
 
@@ -247,7 +244,7 @@
     padding: 1.5rem;
     border-radius: 10px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-    border: 1px solid #f0f4ff;
+    border: 1px solid #e9ecef;
     margin-bottom: 1.5rem;
 }
 
@@ -266,7 +263,6 @@
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.2s ease;
-    box-shadow: 0 2px 6px rgba(78, 115, 223, 0.3);
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
@@ -274,15 +270,13 @@
 
 .btn-calculate:hover {
     background: linear-gradient(135deg, #3b5fc9 0%, #1a3a9e 100%);
-    box-shadow: 0 4px 12px rgba(78, 115, 223, 0.4);
     transform: translateY(-1px);
 }
 
 .calc-info {
-    background: #ecf4ff;
+    background: #e8f0fe;
     padding: 0.8rem 1rem;
     border-radius: 6px;
-    border-left: 4px solid #4e73df;
 }
 
 .calc-info p {
@@ -294,12 +288,11 @@
 
 /* Results Section */
 .calc-results {
-    background: #f8f9ff;
-    border: 1px solid #e8edff;
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
     border-radius: 10px;
     padding: 1.5rem;
     margin-top: 1.5rem;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
 .results-header {
@@ -330,7 +323,7 @@
     color: #2c3e50;
     margin-bottom: 1rem;
     padding-bottom: 0.5rem;
-    border-bottom: 1px solid #e8edff;
+    border-bottom: 1px solid #e9ecef;
 }
 
 .results-grid {
@@ -340,12 +333,12 @@
     margin-bottom: 1rem;
 }
 
+/* Result Cards - Clean & Simple */
 .result-card {
     background: white;
     padding: 1rem;
     border-radius: 8px;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
-    border-left: 4px solid #4e73df;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
     transition: transform 0.2s ease;
 }
 
@@ -353,24 +346,21 @@
     transform: translateY(-1px);
 }
 
+/* Status-based backgrounds */
 .result-card.success {
-    border-left-color: #1cc88a;
-    background: #f6fffd;
+    background: #ecfdf5;
 }
 
 .result-card.danger {
-    border-left-color: #e74a3b;
-    background: #fff6f6;
+    background: #fef2f2;
 }
 
 .result-card.info {
-    border-left-color: #36b9cc;
-    background: #f0fdff;
+    background: #eff6ff;
 }
 
 .result-card.highlight {
-    border-left-color: #f6c23e;
-    background: #fffdf6;
+    background: #fffbeb;
 }
 
 .result-label {
@@ -390,11 +380,19 @@
 }
 
 .result-card.success .result-value {
-    color: #1cc88a;
+    color: #059669;
 }
 
 .result-card.danger .result-value {
-    color: #e74a3b;
+    color: #dc2626;
+}
+
+.result-card.info .result-value {
+    color: #2563eb;
+}
+
+.result-card.highlight .result-value {
+    color: #d97706;
 }
 
 .result-info {
@@ -403,48 +401,48 @@
     margin-top: 0.3rem;
 }
 
+/* Formulas - no borders */
 .result-formula {
-    font-size: 0.75rem;
-    color: #6c757d;
+    font-size: 0.7rem;
+    color: #9ca3af;
     font-family: 'Courier New', monospace;
     margin-top: 0.5rem;
     padding-top: 0.3rem;
-    border-top: 1px dashed #e8edff;
 }
 
 .result-warning {
     font-size: 0.75rem;
-    color: #e74a3b;
+    color: #dc2626;
     font-weight: 600;
     margin-top: 0.5rem;
     padding: 0.3rem 0.5rem;
-    background: #fff5f5;
+    background: #fef2f2;
     border-radius: 4px;
-    border-left: 2px solid #e74a3b;
 }
 
 /* Calculation Status */
 .calculation-status {
-    padding: 1.2rem 1.5rem;
-    /*border-radius: 8px;*/
     margin-top: 1.5rem;
-    /*border: 1px solid;*/
-    background: white;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
 }
 
 .status-success {
     background: #ecfdf5;
     color: #065f46;
-    border-color: #a7f3d0;
+    border-radius: 8px;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
 }
 
 .status-warning {
     background: #fffbeb;
     color: #92400e;
-    border-color: #fed7aa;
+    border-radius: 8px;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
 }
 
 .calculation-status svg {
@@ -494,12 +492,12 @@
 .styled-select__input optgroup {
     font-weight: 600;
     color: #2c3e50;
-    background: #f8f9ff;
+    background: #f8f9fa;
 }
 
 .styled-select__input option {
     padding: 0.5rem 1rem;
-    border-bottom: 1px solid #f0f4ff;
+    border-bottom: 1px solid #e9ecef;
 }
 
 .styled-select__input option:hover {
@@ -515,7 +513,6 @@
 
     .calc-header {
         padding: 1.2rem 1.5rem;
-        border-radius: 10px;
     }
 
     .calc-header h1 {
@@ -556,14 +553,10 @@
         justify-content: center;
     }
 
-    .calculation-status {
+    .status-success,
+    .status-warning {
         flex-direction: column;
         text-align: center;
-        gap: 0.5rem;
-    }
-
-    .styled-select__input {
-        font-size: 0.9rem;
     }
 
     .result-card {
@@ -577,7 +570,7 @@
 
 @media (max-width: 480px) {
     .calculator-container {
-        padding: 0.5rem 0.25rem;
+        padding: 0.5rem;
     }
 
     .calc-header {
@@ -596,13 +589,9 @@
         padding: 0.7rem 0.8rem;
         font-size: 0.9rem;
     }
-
-    .results-grid {
-        gap: 0.8rem;
-    }
 }
 
-/* Animation for results appearance */
+/* Animation */
 @keyframes fadeInUp {
     from {
         opacity: 0;
@@ -615,17 +604,17 @@
 }
 
 .calc-results {
-    animation: fadeInUp 0.5s ease-out;
+    animation: fadeInUp 0.4s ease-out;
 }
 
 .result-card {
-    animation: fadeInUp 0.5s ease-out;
+    animation: fadeInUp 0.4s ease-out;
     animation-fill-mode: both;
 }
 
-.result-card:nth-child(1) { animation-delay: 0.1s; }
-.result-card:nth-child(2) { animation-delay: 0.2s; }
-.result-card:nth-child(3) { animation-delay: 0.3s; }
-.result-card:nth-child(4) { animation-delay: 0.4s; }
-.result-card:nth-child(5) { animation-delay: 0.5s; }
-.result-card:nth-child(6) { animation-delay: 0.6s; }
+.result-card:nth-child(1) { animation-delay: 0.05s; }
+.result-card:nth-child(2) { animation-delay: 0.1s; }
+.result-card:nth-child(3) { animation-delay: 0.15s; }
+.result-card:nth-child(4) { animation-delay: 0.2s; }
+.result-card:nth-child(5) { animation-delay: 0.25s; }
+.result-card:nth-child(6) { animation-delay: 0.3s; }
